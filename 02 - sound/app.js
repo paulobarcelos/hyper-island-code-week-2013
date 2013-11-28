@@ -1,5 +1,5 @@
 // Connect to Spacebrew
-connect('Sound2'); 
+connect('Sound'); 
 
 // "Get" the image element, so we can control it with code
 image = document.getElementById('image');
