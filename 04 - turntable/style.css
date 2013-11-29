@@ -1,0 +1,23 @@
+/* Color to the background */
+body {
+	background-color: #f5d;
+}
+
+/* Enable all the images to be positioned at any place */
+img {
+	position: fixed
+}
+
+
+/* Lets position the images on the screen */
+#andrey-top{
+	left: 0px;
+}
+#andrey-bottom {
+	left: 0px;
+}
+
+/* You can style mutiple elements at once, by separating them with commas */
+#paulo-top, #paulo-bottom {
+	left: 400px;
+}
