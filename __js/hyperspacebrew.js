@@ -3,9 +3,7 @@ if(!name){
 	name = name || 'Code Week app ' + random_id.substring(random_id.length-4);
 }
 
-if(!server){
 	server = "hyperspacebrew.com";
-}
 
 var sb = new Spacebrew.Client({server: server, reconnect: true, name: name});
 
