@@ -98,13 +98,7 @@
 
 			}, true);
 
-			var name = localStorage.getItem('hyperspacebrew_name');
-			if(!name){
-				var randomName = "Phone " + Math.floor(Math.random() * 10000);
-				name = window.prompt("What is your name?", randomName);
-				if(!name) name = randomName;
-				localStorage.setItem('hyperspacebrew_name', name);
-			}
+			var name =  window.prompt("What is your name?", randomName);
 
 			document.body.innerHTML += '<pre>'+name+'<pre>';
 
