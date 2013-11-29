@@ -12,7 +12,10 @@
     	var sb;
 
 		window.onload = function (){
-			sb = new Spacebrew.Client({reconnect:true});
+			sb = new Spacebrew.Client({
+				server: "hyperspacebrew.com",
+				reconnect:true
+			});
 
 			var random_id = "0000" + Math.floor(Math.random() * 10000)
 			sb.name('Code Week');

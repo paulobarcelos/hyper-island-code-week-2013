@@ -1,6 +1,0 @@
-#image {
-	width: 100%; /* width will fill 100% of the space avaiable */
-	height: auto; /* height will be automatically calculated */
-
-	visibility: hidden; /* hide the image initially */
-}
