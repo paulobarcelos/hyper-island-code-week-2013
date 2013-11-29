@@ -3,7 +3,11 @@ if(!name){
 	name = name || 'Code Week app ' + random_id.substring(random_id.length-4);
 }
 
-var sb = new Spacebrew.Client({server: "hyperspacebrew.com", reconnect: true, name: name});
+if(!server){
+	server = "hyperspacebrew.com";
+}
+
+var sb = new Spacebrew.Client({server: server, reconnect: true, name: name});
 
 
 if(typeof onButtonPressed!= "undefined" || typeof onButtonReleased!= "undefined") sb.addSubscribe("Button", "boolean");
