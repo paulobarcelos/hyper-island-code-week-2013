@@ -1,0 +1,29 @@
+
+/* Load font from google */
+@import url(http://fonts.googleapis.com/css?family=Rancho);
+
+#pow {
+	/* set the font settings */
+	font-family: 'Rancho'; 
+	font-size: 200px;
+	color: red;
+
+	text-shadow: 10px 10px #FFFF00;
+
+
+	width: 100%; /* fill the whole page */
+	text-align: center; /* centralize text */
+
+	/* position element on top (otherwise it will be displayed under the image)*/
+	position: absolute;
+	top:100px;
+
+	/* by default, hide the image */
+	visibility: hidden;
+}
+
+
+#rocky {
+	width: 100%; /* width will fill 100% of the space avaiable */
+	height: auto; /* height will be automatically calculated */
+}
