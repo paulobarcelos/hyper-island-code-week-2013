@@ -97,8 +97,10 @@
 				
 
 			}, true);
-
-			var name =  window.prompt("What is your name?", randomName);
+			
+			var randomName = "Phone " + Math.floor(Math.random() * 10000);
+			var name  = window.prompt("What is your name?", randomName)
+			
 
 			document.body.innerHTML += '<pre>'+name+'<pre>';
 
