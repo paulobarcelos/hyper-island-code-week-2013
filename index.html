@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+    <title>Code Week</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+
+    <style type="text/css">
+
+    	body{
+    		font-family: sans-serif;
+    	}
+
+    	*{
+			webkit-user-select: none; /* Chrome/Safari */        
+			-moz-user-select: none; /* Firefox */
+			-ms-user-select: none; /* IE10+ */
+
+			/* Rules below not implemented in browsers yet */
+			-o-user-select: none;
+			user-select: none;
+    	}
+
+    	input[type=range]{
+    		width: 80%;
+    		margin-left: 10%;
+    		margin-right: 10%;
+    	}
+    	input[type="range"]::-webkit-slider-thumb{
+    		height: 30px;
+    	}
+
+    	#button {
+    		background-color: #ddd;
+    		width: 100%;
+    		height: 50px;
+    		text-align: center;
+    		line-height: 50px;
+    		margin-top: 20px;
+    	}
+
+    </style>
+
+
+	<script  src="sb.js"></script>
+    <script>
+
+    	function map(value, low1, high1, low2, high2) {
+			return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+		}
+
+		window.onload = function (){
+
+			var smoothAcceleration = {x:0, y:0, z:0 }
+			var smoothRotation = {alpha:0, beta:0, gamma:0 };
+
+			var motiontrottle = 0;
+			window.addEventListener("devicemotion", function(event) {
+				motiontrottle++;
+				//if(motiontrottle%2 != 0) return;
+				var acceleration = event.accelerationIncludingGravity;
+				var a = 0.5;
+				var b = 0.5;
+				smoothAcceleration.x = smoothAcceleration.x * a + acceleration.x * b;
+				smoothAcceleration.y = smoothAcceleration.y * a + acceleration.y * b;
+				smoothAcceleration.z = smoothAcceleration.z * a + acceleration.z * b;
+
+				accx.innerHTML = map(smoothAcceleration.x, -10, 10, 0, 1024) / 1024;
+				accy.innerHTML = map(smoothAcceleration.y, -10, 10, 0, 1024) / 1024;
+				accz.innerHTML = map(smoothAcceleration.z, -10, 10, 0, 1024) / 1024;
+
+
+				if(motiontrottle%3 == 0) sb.send("Accelerometer X", "range", map(smoothAcceleration.x, -10, 10, 0, 1024));
+				if(motiontrottle%3 == 1) sb.send("Accelerometer Y", "range", map(smoothAcceleration.y, -10, 10, 0, 1024));
+				if(motiontrottle%3 == 2) sb.send("Accelerometer Z", "range", map(smoothAcceleration.z, -10, 10, 0, 1024));
+
+			}, true);
+
+			var orientationtrottle = 0;
+			window.addEventListener("deviceorientation", function(e) {
+				orientationtrottle++;
+				var orientation = e;
+				var a = 0.5;
+				var b = 0.5;
+				smoothRotation.alpha = smoothRotation.alpha * a + orientation.alpha * b;
+				smoothRotation.beta = smoothRotation.beta * a + orientation.beta * b;
+				smoothRotation.gamma = smoothRotation.gamma * a + orientation.gamma * b;
+
+				gyra.innerHTML = map(smoothRotation.alpha, 0, 360, 0, 1024) / 1024;
+				gyrb.innerHTML = map(smoothRotation.beta, -90, 90, 0, 1024) / 1024;
+				gyrg.innerHTML = map(smoothRotation.gamma, -180, 180, 0, 1024) / 1024;
+
+				if(orientationtrottle%3 == 0) sb.send("Gyroscope Gamma", "range", map(smoothRotation.alpha, 0, 360, 0, 1024));
+				if(orientationtrottle%3 == 1) sb.send("Gyroscope Alpha", "range", map(smoothRotation.beta, -90, 90, 0, 1024));
+				if(orientationtrottle%3 == 2) sb.send("Gyroscope Beta", "range", map(smoothRotation.gamma, -180, 180, 0, 1024));
+				
+				
+
+			}, true);
+
+			var name = localStorage.getItem('hyperspacebrew_name');
+			if(!name){
+				var randomName = "Phone " + Math.floor(Math.random() * 10000);
+				name = window.prompt("What is your name?", randomName);
+				if(!name) name = randomName;
+				localStorage.setItem('hyperspacebrew_name', name);
+			}
+
+			document.body.innerHTML += '<pre>'+name+'<pre>';
+
+			var sb = new Spacebrew.Client({
+				name: name,
+				server: "hyperspacebrew.com",
+				reconnect:true
+			});
+			
+		
+			sb.addPublish( "Button", "boolean", "false" );
+			sb.addPublish( "Range 1", "range", "0" );
+			sb.addPublish( "Range 2", "range", "0" );
+			sb.addPublish( "Accelerometer X", "range", "0" );
+			sb.addPublish( "Accelerometer Y", "range", "0" );
+			sb.addPublish( "Accelerometer Z", "range", "0" );
+			sb.addPublish( "Gyroscope Alpha", "range", "0" );
+			sb.addPublish( "Gyroscope Beta", "range", "0" );
+			sb.addPublish( "Gyroscope Gamma", "range", "0" );
+			
+			sb.connect();
+
+			var touchstart =  ('ontouchstart' in document.documentElement) ? 'touchstart' : 'mousedown';
+			var touchend =  ('ontouchend' in document.documentElement) ? 'touchend' : 'mouseup';
+
+
+			var button = document.getElementById('button');
+			var range1 = document.getElementById('range1');
+			var range2 = document.getElementById('range2');
+			var accx = document.getElementById('accx');
+			var accy = document.getElementById('accy');
+			var accz = document.getElementById('accz');
+			var gyra = document.getElementById('gyra');
+			var gyrb = document.getElementById('gyrb');
+			var gyrg = document.getElementById('gyrg');
+
+			button.addEventListener(touchstart, function(e){
+				e.preventDefault();
+				sb.send("Button", "boolean", "true");
+			});
+			button.addEventListener(touchend, function(e){
+				e.preventDefault();
+				sb.send("Button", "boolean", "false");
+			});
+
+
+			var range1Value = 0;
+			var range2Value = 0;
+			setInterval(function(){
+				if(range1.value != range1Value){
+					range1Value = range1.value; 
+					sb.send("Range 1", "range", range1.value);
+				}
+				if(range2.value != range2Value){
+					range2Value = range2.value; 
+					sb.send("Range 2", "range", range2.value);
+				}
+			}, 20);
+		}	
+
+	</script>
+	</head>
+
+	<body>
+		<b>Accelerometer</b><br>
+		X: <b id="accx"></b><br>
+		Y: <b id="accy"></b><br>
+		Z: <b id="accz"></b><br><br>
+		<b>Gyroscope</b><br>
+		Alpha:	<b id="gyra"></b><br>
+		Beta:	<b id="gyrb"></b><br>
+		Gamma:	<b id="gyrg"></b><br><br>
+
+		<b>Range 1</b><br>
+		<input type="range" id="range1" min="0" max="1024" step="1">
+<br>
+		<b>Range 2</b><br>
+		<input type="range" id="range2" min="0" max="1024" step="1">
+
+		<div id="button">PRESS ME</div>
+	</body>
+
+</html>
