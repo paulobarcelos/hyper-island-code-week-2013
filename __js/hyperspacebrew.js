@@ -3,7 +3,7 @@ if(!name){
 	name = name || 'Code Week app ' + random_id.substring(random_id.length-4);
 }
 
-	server = "hyperspacebrew.com";
+	server = "spacebrew.herokuapp.com";
 
 var sb = new Spacebrew.Client({server: server, reconnect: true, name: name});
 

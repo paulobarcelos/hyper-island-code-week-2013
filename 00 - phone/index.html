@@ -12,7 +12,7 @@
     	}
 
     	*{
-			webkit-user-select: none; /* Chrome/Safari */        
+			webkit-user-select: none; /* Chrome/Safari */
 			-moz-user-select: none; /* Firefox */
 			-ms-user-select: none; /* IE10+ */
 
@@ -93,28 +93,28 @@
 				if(orientationtrottle%3 == 0) sb.send("Gyroscope Gamma", "range", map(smoothRotation.alpha, 0, 360, 0, 1024));
 				if(orientationtrottle%3 == 1) sb.send("Gyroscope Alpha", "range", map(smoothRotation.beta, -90, 90, 0, 1024));
 				if(orientationtrottle%3 == 2) sb.send("Gyroscope Beta", "range", map(smoothRotation.gamma, -180, 180, 0, 1024));
-				
-				
+
+
 
 			}, true);
 
-			var name = localStorage.getItem('hyperspacebrew_name');
+			var name;//= localStorage.getItem('hyperspacebrew_name');
 			if(!name){
 				var randomName = "Phone " + Math.floor(Math.random() * 10000);
 				name = window.prompt("What is your name?", randomName);
 				if(!name) name = randomName;
-				localStorage.setItem('hyperspacebrew_name', name);
+				//localStorage.setItem('hyperspacebrew_name', name);
 			}
 
 			document.body.innerHTML += '<pre>'+name+'<pre>';
 
 			var sb = new Spacebrew.Client({
 				name: name,
-				server: "hyperspacebrew.com",
+				server: "spacebrew.herokuapp.com",
 				reconnect:true
 			});
-			
-		
+
+
 			sb.addPublish( "Button", "boolean", "false" );
 			sb.addPublish( "Range 1", "range", "0" );
 			sb.addPublish( "Range 2", "range", "0" );
@@ -124,7 +124,7 @@
 			sb.addPublish( "Gyroscope Alpha", "range", "0" );
 			sb.addPublish( "Gyroscope Beta", "range", "0" );
 			sb.addPublish( "Gyroscope Gamma", "range", "0" );
-			
+
 			sb.connect();
 
 			var touchstart =  ('ontouchstart' in document.documentElement) ? 'touchstart' : 'mousedown';
@@ -155,15 +155,15 @@
 			var range2Value = 0;
 			setInterval(function(){
 				if(range1.value != range1Value){
-					range1Value = range1.value; 
+					range1Value = range1.value;
 					sb.send("Range 1", "range", range1.value);
 				}
 				if(range2.value != range2Value){
-					range2Value = range2.value; 
+					range2Value = range2.value;
 					sb.send("Range 2", "range", range2.value);
 				}
 			}, 20);
-		}	
+		}
 
 	</script>
 	</head>

@@ -1,59 +1,59 @@
 /**
- * 
+ *
  * Spacebrew Library for Javascript
  * --------------------------------
- *  
- * This library was designed to work on front-end (browser) envrionments, and back-end (server) 
- * environments. Please refer to the readme file, the documentation and examples to learn how to 
+ *
+ * This library was designed to work on front-end (browser) envrionments, and back-end (server)
+ * environments. Please refer to the readme file, the documentation and examples to learn how to
  * use this library.
- * 
- * Spacebrew is an open, dynamically re-routable software toolkit for choreographing interactive 
- * spaces. Or, in other words, a simple way to connect interactive things to one another. Learn 
+ *
+ * Spacebrew is an open, dynamically re-routable software toolkit for choreographing interactive
+ * spaces. Or, in other words, a simple way to connect interactive things to one another. Learn
  * more about Spacebrew here: http://docs.spacebrew.cc/
  *
  * To import into your web apps, we recommend using the minimized version of this library.
  *
  * Latest Updates:
- * - added blank "options" attribute to config message - for future use 
+ * - added blank "options" attribute to config message - for future use
  * - caps number of messages sent to 60 per second
  * - reconnect to spacebrew if connection lost
  * - enable client apps to extend libs with admin functionality.
  * - added close method to close Spacebrew connection.
- * 
+ *
  * @author 		Brett Renfer and Julio Terra from LAB @ Rockwell Group
  * @filename	sb-1.3.0.js
  * @version 	1.3.0
  * @date 		May 7, 2013
- * 
+ *
  */
 
 /**
  * Check if Bind method exists in current enviroment. If not, it creates an implementation of
  * this useful method.
  */
-if (!Function.prototype.bind) {  
-  Function.prototype.bind = function (oThis) {  
-	if (typeof this !== "function") {  
-	  // closest thing possible to the ECMAScript 5 internal IsCallable function  
-	  throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");  
-	} 
-  
-	var aArgs = Array.prototype.slice.call(arguments, 1),   
-		fToBind = this,   
-		fNOP = function () {},  
-		fBound = function () {  
-		  return fToBind.apply(this instanceof fNOP  
-								 ? this  
-								 : oThis || window,  
-							    aArgs.concat(Array.prototype.slice.call(arguments)));  
-		};  
-  
-	fNOP.prototype = this.prototype;  
-	fBound.prototype = new fNOP();  
-  
-	return fBound;  
-  };  
-} 
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function (oThis) {
+	if (typeof this !== "function") {
+	  // closest thing possible to the ECMAScript 5 internal IsCallable function
+	  throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+	}
+
+	var aArgs = Array.prototype.slice.call(arguments, 1),
+		fToBind = this,
+		fNOP = function () {},
+		fBound = function () {
+		  return fToBind.apply(this instanceof fNOP
+								 ? this
+								 : oThis || window,
+							    aArgs.concat(Array.prototype.slice.call(arguments)));
+		};
+
+	fNOP.prototype = this.prototype;
+	fBound.prototype = new fNOP();
+
+	return fBound;
+  };
+}
 
 /**
  * @namespace for Spacebrew library
@@ -67,7 +67,7 @@ var WebSocket = WebSocket || {};
 
 
 /**
- * Check if Running in Browser or Server (Node) Environment * 
+ * Check if Running in Browser or Server (Node) Environment *
  */
 
 // check if window object already exists to determine if running browswer
@@ -93,7 +93,7 @@ if (window) {
 			if( results == null ) return "";
 			else return results[1];
 		}
-	}	
+	}
 }
 
 // if app is running in a node server environment then package Spacebrew library as a module.
@@ -102,12 +102,12 @@ if (!window && module) {
 	WebSocket = require("ws");
 	module.exports = {
 		Spacebrew: Spacebrew
-	} 
+	}
 }
 
 
 /**
- * Define the Spacebrew Library * 
+ * Define the Spacebrew Library *
  */
 
 /**
@@ -134,7 +134,7 @@ Spacebrew.Client = function( server, name, description, options ){
 			description = server.description || undefined;
 			name = server.name || undefined;
 			server = server.server || undefined;
-		}	
+		}
 	}
 
 	this.debug = (window.getQueryString('debug') === "true" ? true : (options.debug || false));
@@ -153,7 +153,7 @@ Spacebrew.Client = function( server, name, description, options ){
 	if (window) {
 		this._name = (window.getQueryString('name') !== "" ? unescape(window.getQueryString('name')) : this._name);
 	}
-	
+
 	/**
 	 * Description of your app
 	 * @type {String}
@@ -176,12 +176,12 @@ Spacebrew.Client = function( server, name, description, options ){
 	 * Port number on which Spacebrew server is running
 	 * @type {Integer}
 	 */
-	this.port = options.port || 9000;
+	this.port = options.port || 80;
 	if (window) {
 		port = window.getQueryString('port');
-		if (port !== "" && !isNaN(port)) { 
-			this.port = port; 
-		} 
+		if (port !== "" && !isNaN(port)) {
+			this.port = port;
+		}
 	}
 
 	/**
@@ -216,7 +216,7 @@ Spacebrew.Client = function( server, name, description, options ){
 }
 
 /**
- * Connect to Spacebrew 
+ * Connect to Spacebrew
  * @memberOf Spacebrew.Client
  */
 Spacebrew.Client.prototype.connect = function(){
@@ -242,8 +242,8 @@ Spacebrew.Client.prototype.close = function(){
 			this.socket.close();
 			this._isConnected = false;
 			console.log("[close:Spacebrew] closing websocket connection")
-		}		
-	} catch (e) {		
+		}
+	} catch (e) {
 		this._isConnected = false;
 	}
 }
@@ -301,7 +301,7 @@ Spacebrew.Client.prototype.onCustomMessage = function( name, value, type ){}
 
 
 /**
- * Add a route you are publishing on 
+ * Add a route you are publishing on
  * @param {String} name Name of incoming route
  * @param {String} type "boolean", "range", or "string"
  * @param {String} def  default value
@@ -364,12 +364,12 @@ Spacebrew.Client.prototype.send = function( name, type, value ){
 
 		// set the timer to unblock message sending
 		setTimeout(function() {
-			self.send_blocked = false;  	// remove send block			
+			self.send_blocked = false;  	// remove send block
 			if (self.msg != undefined) {  	// if message exists then sent it
 				self.send(self.msg.message.name, self.msg.message.type, self.msg.message.value);
 			}
 		}, self.send_interval);
-   	} 
+   	}
 }
 
 /**
@@ -408,7 +408,7 @@ Spacebrew.Client.prototype._onMessage = function( e ){
 		, value
 		;
 
-	// handle client messages 
+	// handle client messages
 	if (data["message"]) {
 		// check to make sure that this is not an admin message
 		if (!data.message["clientName"]) {
@@ -428,14 +428,14 @@ Spacebrew.Client.prototype._onMessage = function( e ){
 					break;
 				default:
 					this.onCustomMessage( name, value, type );
-			}			
+			}
 		}
-	} 
+	}
 
 	// handle admin messages
 	else {
 		if (this.admin.active) {
-			this._handleAdminMessages( data );		
+			this._handleAdminMessages( data );
 		}
 	}
 }
@@ -471,28 +471,28 @@ Spacebrew.Client.prototype._onClose = function() {
  * name Method that sets or gets the spacebrew app name. If parameter is provided then it sets the name, otherwise
  * 		it just returns the current app name.
  * @param  {String} newName New name of the spacebrew app
- * @return {String} Returns the name of the spacebrew app if called as a getter function. If called as a 
- *                  setter function it will return false if the method is called after connecting to spacebrew, 
+ * @return {String} Returns the name of the spacebrew app if called as a getter function. If called as a
+ *                  setter function it will return false if the method is called after connecting to spacebrew,
  *                  because the name must be configured before connection is made.
  */
 Spacebrew.Client.prototype.name = function (newName){
 	if (newName) {								// if a name has been passed in then update it
 		if (this._isConnected) return false;  	// if already connected we can't update name
-		this._name = newName;	
+		this._name = newName;
 		if (window) {
 			this._name = (window.getQueryString('name') !== "" ? unescape(window.getQueryString('name')) : this._name);
 		}
 		this.client_config.name = this._name;			// update spacebrew config file
-	} 	
-	return this._name;	
+	}
+	return this._name;
 };
 
 /**
- * name Method that sets or gets the spacebrew app description. If parameter is provided then it sets the description, 
+ * name Method that sets or gets the spacebrew app description. If parameter is provided then it sets the description,
  * 		otherwise it just returns the current app description.
  * @param  {String} newDesc New description of the spacebrew app
- * @return {String} Returns the description of the spacebrew app if called as a getter function. If called as a 
- *                  setter function it will return false if the method is called after connecting to spacebrew, 
+ * @return {String} Returns the description of the spacebrew app if called as a getter function. If called as a
+ *                  setter function it will return false if the method is called after connecting to spacebrew,
  *                  because the description must be configured before connection is made.
  */
 Spacebrew.Client.prototype.description = function (newDesc){
@@ -503,8 +503,8 @@ Spacebrew.Client.prototype.description = function (newDesc){
 			this._description = (window.getQueryString('description') !== "" ? unescape(window.getQueryString('description')) : this._description);
 		}
 		this.client_config.description = this._description;	// update spacebrew config file
-	} 
-	return this._description;	
+	}
+	return this._description;
 };
 
 /**
@@ -512,15 +512,14 @@ Spacebrew.Client.prototype.description = function (newDesc){
  * @return {Boolean} Returns true if currently connected to Spacebrew
  */
 Spacebrew.Client.prototype.isConnected = function (){
-	return this._isConnected;	
+	return this._isConnected;
 };
 
 
-Spacebrew.Client.prototype.extend = function ( mixin ) {    
+Spacebrew.Client.prototype.extend = function ( mixin ) {
     for (var prop in mixin) {
         if (mixin.hasOwnProperty(prop)) {
             this[prop] = mixin[prop];
         }
     }
 };
-
